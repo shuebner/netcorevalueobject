@@ -1,16 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ValueObject
 {
     public abstract class ValueObject<T> : IEquatable<T>
         where T : ValueObject<T>
     {
+        private static readonly MethodInfo SequenceEqualMethod = typeof(Enumerable)
+            .GetMethods(BindingFlags.Static | BindingFlags.Public)
+            .Where(method => method.Name == nameof(Enumerable.SequenceEqual))
+            .Where(method => method.GetParameters() is ParameterInfo[] parameters &&
+                parameters.Count() == 2 &&
+                parameters[0].ParameterType.IsGenericType &&
+                parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
+                parameters[1].ParameterType.IsGenericType &&
+                parameters[1].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            .Single();
+
         private static readonly ParameterExpression OneParam = Expression.Parameter(typeof(T), "one");
         private static readonly ParameterExpression OtherParam = Expression.Parameter(typeof(T), "other");
 
-        private static readonly string[] PropertyNames = typeof(T).GetProperties()
+        private static readonly PropertyInfo[] PropertyInfos = typeof(T).GetProperties();
+        private static readonly string[] PropertyNames = PropertyInfos
                 .Select(p => p.Name)
                 .ToArray();
 
@@ -33,17 +48,33 @@ namespace ValueObject
 
         private static Func<T, T, bool> GenerateGenericEquals()
         {
-            Expression andExpression = PropertyNames.Skip(1).Aggregate
-                (EqualsExpr(PropertyNames.First()),
-                (exp, propName) => Expression.AndAlso(
+            Expression andExpression = PropertyInfos.Skip(1).Aggregate
+                (EqualityExpr(PropertyInfos.First()),
+                (exp, prop) => Expression.AndAlso(
                         exp,
-                        EqualsExpr(propName)));
+                        EqualityExpr(prop)));
 
             Expression<Func<T, T, bool>> equalsExpression = Expression.Lambda<Func<T, T, bool>>(
                 andExpression,
                 new[] { OneParam, OtherParam });
 
             return equalsExpression.Compile();
+
+            Expression EqualityExpr(PropertyInfo propertyInfo)
+            {
+                var propertyName = propertyInfo.Name;
+
+                if (propertyInfo.PropertyType == typeof(ImmutableArray<string>))
+                {
+                    return Expression.Call(null,
+                        SequenceEqualMethod.MakeGenericMethod(typeof(string)),
+                        Expression.Convert(
+                            Expression.Property(OneParam, propertyName), typeof(IEnumerable<string>)),
+                        Expression.Convert(
+                            Expression.Property(OtherParam, propertyName), typeof(IEnumerable<string>)));
+                }
+                return EqualsExpr(propertyInfo.Name);
+            }
 
             BinaryExpression EqualsExpr(string propertyName) =>
                 Expression.Equal(

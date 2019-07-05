@@ -94,6 +94,33 @@ namespace ValueObject.Test
         }
 
         [Fact]
+        public void Equals_When_list_contains_same_primitives_in_same_order_Then_returns_true()
+        {
+            var isEqual = new ValueObjectWithAListOfPrimitive("one", "two", "three")
+                .Equals(new ValueObjectWithAListOfPrimitive("one", "two", "three"));
+
+            isEqual.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equals_When_list_contains_same_primitives_in_different_order_Then_returns_false()
+        {
+            var isEqual = new ValueObjectWithAListOfPrimitive("one", "two", "three")
+                .Equals(new ValueObjectWithAListOfPrimitive("one", "three", "two"));
+
+            isEqual.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_When_list_contains_different_primitives_Then_returns_false()
+        {
+            var isEqual = new ValueObjectWithAListOfPrimitive("one", "two", "three")
+                .Equals(new ValueObjectWithAListOfPrimitive("one", "two", "three", "four"));
+
+            isEqual.Should().BeFalse();
+        }
+
+        [Fact]
         [Trait("Category", "Performance")]
         public void Equals_is_an_order_of_magnitude_faster_reflection()
         {
