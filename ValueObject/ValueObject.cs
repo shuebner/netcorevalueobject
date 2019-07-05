@@ -39,7 +39,7 @@ namespace ValueObject
                         exp,
                         EqualsExpr(propName)));
 
-            var equalsExpression = Expression.Lambda<Func<T, T, bool>>(
+            Expression<Func<T, T, bool>> equalsExpression = Expression.Lambda<Func<T, T, bool>>(
                 andExpression,
                 new[] { OneParam, OtherParam });
 
