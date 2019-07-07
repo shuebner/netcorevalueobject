@@ -10,6 +10,7 @@ namespace ValueObject
     public static class GenericEquals
     {
         private static readonly Type[] ValidSequenceTypes = { typeof(ImmutableArray<>), typeof(ImmutableList<>) };
+        private static readonly Type[] ValueTypeEquivalents = { typeof(string) };
 
         public static Func<T, T, bool> For<T>()
         {
@@ -46,21 +47,46 @@ namespace ValueObject
             {
                 var propertyName = propertyInfo.Name;
                 var propertyType = propertyInfo.PropertyType;
-
-                if (propertyType.IsGenericType &&
-                    ValidSequenceTypes.Contains(propertyType.GetGenericTypeDefinition()))
+                
+                if (propertyType.IsGenericType && ValidSequenceTypes.Contains(propertyType.GetGenericTypeDefinition()))
                 {
                     return SequenceEqualsExpr(propertyName, propertyType.GenericTypeArguments.Single());
                 }
 
-                return EqualExpr(propertyName);
+                if (propertyType.IsValueType || ValueTypeEquivalents.Contains(propertyType))
+                {
+                    return EqualOperatorExpr(propertyName);
+                }
+
+                if (propertyType.GetInterfaces().Any(i =>
+                    i.IsGenericType &&
+                    i.GetGenericTypeDefinition() == typeof(IEquatable<>) &&
+                    i.GenericTypeArguments.Single() == propertyType))
+                {
+                    return
+                        Expression.OrElse(
+                            EqualOperatorExpr(propertyName),
+                            Expression.AndAlso(
+                                Expression.Not(
+                                    Expression.ExclusiveOr(
+                                        Expression.Equal(
+                                            Expression.Property(OneParam, propertyName),
+                                            Expression.Constant(null)),
+                                        Expression.Equal(
+                                            Expression.Property(OtherParam, propertyName),
+                                            Expression.Constant(null)))),
+                                EqualsExpr(propertyName, propertyType)));
+                }
+
+                throw new ArgumentException($"cannot handle property {propertyName} of type {propertyType.FullName}");
             }
 
             MethodCallExpression SequenceEqualsExpr(string propertyName, Type elementType)
             {
                 var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
 
-                return Expression.Call(null,
+                return Expression.Call(
+                    null,
                     Methods.SequenceEqual(elementType),
                     Expression.Convert(
                         Expression.Property(OneParam, propertyName), enumerableType),
@@ -68,7 +94,13 @@ namespace ValueObject
                         Expression.Property(OtherParam, propertyName), enumerableType));
             }
 
-            BinaryExpression EqualExpr(string propertyName) =>
+            MethodCallExpression EqualsExpr(string propertyName, Type propertyType) =>
+                Expression.Call(
+                    Expression.Property(OneParam, propertyName),
+                    Methods.EquatableEquals(propertyType),
+                    Expression.Property(OtherParam, propertyName));
+
+            BinaryExpression EqualOperatorExpr(string propertyName) =>
                 Expression.Equal(
                     Expression.Property(OneParam, propertyName),
                     Expression.Property(OtherParam, propertyName));

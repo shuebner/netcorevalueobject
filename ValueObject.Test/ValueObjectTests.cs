@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace ValueObject.Test
@@ -55,31 +56,54 @@ namespace ValueObject.Test
             isEqual.Should().BeTrue();
         }
 
-        [Fact]
-        public void Equals_When_primitive_value_is_different_Then_returns_false()
+        [Theory]
+        [InlineData("foo", "bar")]
+        [InlineData(null, "foo")]
+        [InlineData("foo", null)]
+        public void Equals_When_primitive_value_is_different_Then_returns_false(string value1, string value2)
         {
-            var isEqual = new ValueObjectWithValue<string>("foo")
-                .Equals(new ValueObjectWithValue<string>("bar"));
+            var isEqual = new ValueObjectWithValue<string>(value1)
+                .Equals(new ValueObjectWithValue<string>(value2));
 
             isEqual.Should().BeFalse();
         }
 
-        [Fact]
-        public void Equals_When_primitive_value_is_equal_Then_returns_true()
+        [Theory]
+        [InlineData("foo")]
+        [InlineData(null)]
+        public void Equals_When_primitive_value_is_equal_Then_returns_true(string value)
         {
-            var isEqual = new ValueObjectWithValue<string>("foo")
-                .Equals(new ValueObjectWithValue<string>("foo"));
+            var isEqual = new ValueObjectWithValue<string>(value)
+                .Equals(new ValueObjectWithValue<string>(value));
 
             isEqual.Should().BeTrue();
         }
 
         [Fact]
-        public void Equals_When_primitive_values_are_different_Then_returns_false()
+        public void Equals_When_equatables_are_equal_Then_returns_true()
         {
-            var isEqual = new ValueObjectWithValue<string>("foo")
-                .Equals(new ValueObjectWithValue<string>("bar"));
+            var isEqual = new ValueObjectWithValue<SomeEquatable>(new SomeEquatable("42"))
+                .Equals(new ValueObjectWithValue<SomeEquatable>(new SomeEquatable("42")));
+
+            isEqual.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equals_When_equatables_are_not_equal_Then_returns_false()
+        {
+            var isEqual = new ValueObjectWithValue<SomeEquatable>(new SomeEquatable("42"))
+                .Equals(new ValueObjectWithValue<SomeEquatable>(new SomeEquatable("23")));
 
             isEqual.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_When_equatables_are_both_null_Then_returns_true()
+        {
+            var isEqual = new ValueObjectWithValue<SomeEquatable>(null)
+                .Equals(new ValueObjectWithValue<SomeEquatable>(null));
+
+            isEqual.Should().BeTrue();
         }
 
         [Fact]
@@ -134,6 +158,20 @@ namespace ValueObject.Test
                 .Equals(new ValueObjectWithAListOfPrimitives<string>("one", "two", "three", "four"));
 
             isEqual.Should().BeFalse();
+        }
+
+        private class SomeEquatable : IEquatable<SomeEquatable>
+        {
+            public SomeEquatable(string value)
+            {
+                Value = value;
+            }
+
+            public string Value { get; }
+
+            public bool Equals(SomeEquatable other) =>
+                other != null &&
+                other.Value == Value;
         }
     }
 }

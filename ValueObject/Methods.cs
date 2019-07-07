@@ -7,7 +7,8 @@ namespace ValueObject
 {
     public static class Methods
     {
-        public static MethodInfo SequenceEqual(Type type) => typeof(Enumerable)
+        public static MethodInfo SequenceEqual(Type type) =>
+            typeof(Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(method => method.Name == nameof(Enumerable.SequenceEqual))
                 .Where(method => method.GetParameters() is ParameterInfo[] parameters &&
@@ -18,5 +19,10 @@ namespace ValueObject
                     parameters[1].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
                 .Single()
                 .MakeGenericMethod(type);
+
+        public static MethodInfo EquatableEquals(Type type) =>
+            type.GetMethod(
+                nameof(IEquatable<object>.Equals),
+                new[] { type });
     }
 }
