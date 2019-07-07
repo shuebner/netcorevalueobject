@@ -4,12 +4,13 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace ValueObject
 {
     public static class GenericEquals
     {
+        private static readonly Type[] ValidSequenceTypes = { typeof(ImmutableArray<>), typeof(ImmutableList<>) };
+
         public static Func<T, T, bool> For<T>()
         {
             ParameterExpression OneParam = Expression.Parameter(typeof(T), "one");
@@ -44,13 +45,15 @@ namespace ValueObject
             Expression EqualityExpr(PropertyInfo propertyInfo)
             {
                 var propertyName = propertyInfo.Name;
+                var propertyType = propertyInfo.PropertyType;
 
-                if (propertyInfo.PropertyType.IsGenericType &&
-                    propertyInfo.PropertyType.GetGenericTypeDefinition() == typeof(ImmutableArray<>))
+                if (propertyType.IsGenericType &&
+                    ValidSequenceTypes.Contains(propertyType.GetGenericTypeDefinition()))
                 {
-                    return SequenceEqualsExpr(propertyName, typeof(string));
+                    return SequenceEqualsExpr(propertyName, propertyType.GenericTypeArguments.Single());
                 }
-                return EqualsExpr(propertyInfo.Name);
+
+                return EqualsExpr(propertyName);
             }
 
             MethodCallExpression SequenceEqualsExpr(string propertyName, Type elementType)

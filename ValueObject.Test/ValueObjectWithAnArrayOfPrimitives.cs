@@ -2,13 +2,13 @@
 
 namespace ValueObject.Test
 {
-    public class ValueObjectWithAnArrayOfPrimitives : ValueObject<ValueObjectWithAnArrayOfPrimitives>
+    public class ValueObjectWithAnArrayOfPrimitives<T> : ValueObject<ValueObjectWithAnArrayOfPrimitives<T>>
     {
-        public ValueObjectWithAnArrayOfPrimitives(params string[] values)
+        public ValueObjectWithAnArrayOfPrimitives(params T[] values)
         {
             Values = values.ToImmutableArray();
         }
 
-        public ImmutableArray<string> Values { get; }
+        public ImmutableArray<T> Values { get; }
     }
 }
