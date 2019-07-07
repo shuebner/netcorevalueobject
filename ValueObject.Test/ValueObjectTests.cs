@@ -8,7 +8,7 @@ namespace ValueObject.Test
         [Fact]
         public void ObjectEquals_When_other_is_null_Then_returns_false()
         {
-            var isEqual = ((object)new ValueObjectWithAPrimitive("42")).Equals(null);
+            var isEqual = ((object)new ValueObjectWithValue<string>("42")).Equals(null);
 
             isEqual.Should().BeFalse();
         }
@@ -16,7 +16,7 @@ namespace ValueObject.Test
         [Fact]
         public void ObjectEquals_When_other_is_of_other_type_Then_returns_false()
         {
-            var isEqual = ((object)new ValueObjectWithAPrimitive("42")).Equals("42");
+            var isEqual = ((object)new ValueObjectWithValue<string>("42")).Equals("42");
 
             isEqual.Should().BeFalse();
         }
@@ -24,7 +24,7 @@ namespace ValueObject.Test
         [Fact]
         public void ObjectEquals_When_other_is_same_reference_Then_returns_true()
         {
-            object valueObject = new ValueObjectWithAPrimitive("42");
+            object valueObject = new ValueObjectWithValue<string>("42");
             var isEqual = ((object)valueObject).Equals(valueObject);
 
             isEqual.Should().BeTrue();
@@ -41,7 +41,7 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_other_is_null_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAPrimitive("42").Equals(null);
+            var isEqual = new ValueObjectWithValue<string>("42").Equals(null);
 
             isEqual.Should().BeFalse();
         }
@@ -49,7 +49,7 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_other_is_same_reference_Then_returns_true()
         {
-            object valueObject = new ValueObjectWithAPrimitive("42");
+            object valueObject = new ValueObjectWithValue<string>("42");
             var isEqual = valueObject.Equals(valueObject);
 
             isEqual.Should().BeTrue();
@@ -58,8 +58,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_primitive_value_is_different_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAPrimitive("foo")
-                .Equals(new ValueObjectWithAPrimitive("bar"));
+            var isEqual = new ValueObjectWithValue<string>("foo")
+                .Equals(new ValueObjectWithValue<string>("bar"));
 
             isEqual.Should().BeFalse();
         }
@@ -67,8 +67,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_primitive_value_is_equal_Then_returns_true()
         {
-            var isEqual = new ValueObjectWithAPrimitive("foo")
-                .Equals(new ValueObjectWithAPrimitive("foo"));
+            var isEqual = new ValueObjectWithValue<string>("foo")
+                .Equals(new ValueObjectWithValue<string>("foo"));
 
             isEqual.Should().BeTrue();
         }
@@ -76,8 +76,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_primitive_values_are_different_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAPrimitive("foo")
-                .Equals(new ValueObjectWithAPrimitive("bar"));
+            var isEqual = new ValueObjectWithValue<string>("foo")
+                .Equals(new ValueObjectWithValue<string>("bar"));
 
             isEqual.Should().BeFalse();
         }
