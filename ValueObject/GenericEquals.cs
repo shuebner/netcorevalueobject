@@ -53,7 +53,7 @@ namespace ValueObject
                     return SequenceEqualsExpr(propertyName, propertyType.GenericTypeArguments.Single());
                 }
 
-                return EqualsExpr(propertyName);
+                return EqualExpr(propertyName);
             }
 
             MethodCallExpression SequenceEqualsExpr(string propertyName, Type elementType)
@@ -68,7 +68,7 @@ namespace ValueObject
                         Expression.Property(OtherParam, propertyName), enumerableType));
             }
 
-            BinaryExpression EqualsExpr(string propertyName) =>
+            BinaryExpression EqualExpr(string propertyName) =>
                 Expression.Equal(
                     Expression.Property(OneParam, propertyName),
                     Expression.Property(OtherParam, propertyName));
