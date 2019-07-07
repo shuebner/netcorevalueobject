@@ -94,7 +94,7 @@ namespace ValueObject.Test
         }
 
         [Fact]
-        public void Equals_When_list_contains_same_primitives_in_same_order_Then_returns_true()
+        public void Equals_When_array_contains_same_primitives_in_same_order_Then_returns_true()
         {
             var isEqual = new ValueObjectWithAnArrayOfPrimitives("one", "two", "three")
                 .Equals(new ValueObjectWithAnArrayOfPrimitives("one", "two", "three"));
@@ -103,7 +103,7 @@ namespace ValueObject.Test
         }
 
         [Fact]
-        public void Equals_When_list_contains_same_primitives_in_different_order_Then_returns_false()
+        public void Equals_When_array_contains_same_primitives_in_different_order_Then_returns_false()
         {
             var isEqual = new ValueObjectWithAnArrayOfPrimitives("one", "two", "three")
                 .Equals(new ValueObjectWithAnArrayOfPrimitives("one", "three", "two"));
@@ -112,7 +112,7 @@ namespace ValueObject.Test
         }
 
         [Fact]
-        public void Equals_When_list_contains_different_primitives_Then_returns_false()
+        public void Equals_When_array_contains_different_primitives_Then_returns_false()
         {
             var isEqual = new ValueObjectWithAnArrayOfPrimitives("one", "two", "three")
                 .Equals(new ValueObjectWithAnArrayOfPrimitives("one", "two", "three", "four"));
@@ -122,7 +122,7 @@ namespace ValueObject.Test
 
         [Fact]
         [Trait("Category", "Performance")]
-        public void Equals_is_an_order_of_magnitude_faster_reflection()
+        public void Equals_is_an_order_of_magnitude_faster_than_reflection()
         {
             var foo = new ValueObjectWithManyPrimitives(
                 "foo",
