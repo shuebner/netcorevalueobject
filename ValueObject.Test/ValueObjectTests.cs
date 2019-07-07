@@ -96,8 +96,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_list_contains_same_primitives_in_same_order_Then_returns_true()
         {
-            var isEqual = new ValueObjectWithAListOfPrimitive("one", "two", "three")
-                .Equals(new ValueObjectWithAListOfPrimitive("one", "two", "three"));
+            var isEqual = new ValueObjectWithAnArrayOfPrimitives("one", "two", "three")
+                .Equals(new ValueObjectWithAnArrayOfPrimitives("one", "two", "three"));
 
             isEqual.Should().BeTrue();
         }
@@ -105,8 +105,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_list_contains_same_primitives_in_different_order_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAListOfPrimitive("one", "two", "three")
-                .Equals(new ValueObjectWithAListOfPrimitive("one", "three", "two"));
+            var isEqual = new ValueObjectWithAnArrayOfPrimitives("one", "two", "three")
+                .Equals(new ValueObjectWithAnArrayOfPrimitives("one", "three", "two"));
 
             isEqual.Should().BeFalse();
         }
@@ -114,8 +114,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_list_contains_different_primitives_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAListOfPrimitive("one", "two", "three")
-                .Equals(new ValueObjectWithAListOfPrimitive("one", "two", "three", "four"));
+            var isEqual = new ValueObjectWithAnArrayOfPrimitives("one", "two", "three")
+                .Equals(new ValueObjectWithAnArrayOfPrimitives("one", "two", "three", "four"));
 
             isEqual.Should().BeFalse();
         }

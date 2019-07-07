@@ -2,9 +2,9 @@
 
 namespace ValueObject.Test
 {
-    public class ValueObjectWithAListOfPrimitive : ValueObject<ValueObjectWithAListOfPrimitive>
+    public class ValueObjectWithAnArrayOfPrimitives : ValueObject<ValueObjectWithAnArrayOfPrimitives>
     {
-        public ValueObjectWithAListOfPrimitive(params string[] values)
+        public ValueObjectWithAnArrayOfPrimitives(params string[] values)
         {
             Values = values.ToImmutableArray();
         }
