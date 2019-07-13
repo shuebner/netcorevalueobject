@@ -178,6 +178,29 @@ namespace ValueObject.Test
             isEqual.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData(23, 23)]
+        public void Equals_When_nullable_values_are_equal_Then_returns_true(int? oneValue, int? otherValue)
+        {
+            var isEqual = new ValueObjectWithValue<int?>(oneValue)
+                .Equals(new ValueObjectWithValue<int?>(otherValue));
+
+            isEqual.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(null, 1)]
+        [InlineData(1, null)]
+        [InlineData(1, 2)]
+        public void Equals_When_nullable_values_are_not_equal_Then_returns_false(int? oneValue, int? otherValue)
+        {
+            var isEqual = new ValueObjectWithValue<int?>(oneValue)
+                .Equals(new ValueObjectWithValue<int?>(otherValue));
+
+            isEqual.Should().BeFalse();
+        }
+
         private class SomeEquatable : IEquatable<SomeEquatable>
         {
             public SomeEquatable(string value)
