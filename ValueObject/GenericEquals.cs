@@ -27,15 +27,8 @@ namespace ValueObject
                     .Compile();
             }
 
-            string[] PropertyNames = propertyInfos
-                .Select(p => p.Name)
-                .ToArray();
-
-            Expression andExpression = propertyInfos.Skip(1).Aggregate
-                (EqualityExpr(propertyInfos.First()),
-                (exp, prop) => Expression.AndAlso(
-                        exp,
-                        EqualityExpr(prop)));
+            var equalityExpressions = propertyInfos.Select(EqualityExpr);
+            var andExpression = equalityExpressions.Aggregate(Expression.AndAlso);
 
             Expression<Func<T, T, bool>> equalsExpression = Expression.Lambda<Func<T, T, bool>>(
                 andExpression,
