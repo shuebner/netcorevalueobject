@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System;
+using System.Collections.Immutable;
 using Xunit;
 
 namespace ValueObject.Test
@@ -127,8 +128,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_array_contains_same_primitives_in_same_order_Then_returns_true()
         {
-            var isEqual = new ValueObjectWithAnArrayOfPrimitives<int>(1, 2, 3)
-                .Equals(new ValueObjectWithAnArrayOfPrimitives<int>(1, 2, 3));
+            var isEqual = new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3))
+                .Equals(new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3)));
 
             isEqual.Should().BeTrue();
         }
@@ -136,8 +137,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_array_contains_same_primitives_in_different_order_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAnArrayOfPrimitives<int>(1, 2, 3)
-                .Equals(new ValueObjectWithAnArrayOfPrimitives<int>(1, 3, 2));
+            var isEqual = new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3))
+                .Equals(new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 3, 2)));
 
             isEqual.Should().BeFalse();
         }
@@ -145,8 +146,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_array_contains_different_primitives_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAnArrayOfPrimitives<int>(1, 2, 3)
-                .Equals(new ValueObjectWithAnArrayOfPrimitives<int>(1, 2, 4));
+            var isEqual = new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3))
+                .Equals(new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 4)));
 
             isEqual.Should().BeFalse();
         }
@@ -154,8 +155,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_list_contains_same_primitives_in_same_order_Then_returns_true()
         {
-            var isEqual = new ValueObjectWithAListOfPrimitives<int>(1, 2, 3)
-                .Equals(new ValueObjectWithAListOfPrimitives<int>(1, 2, 3));
+            var isEqual = new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3))
+                .Equals(new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3)));
 
             isEqual.Should().BeTrue();
         }
@@ -163,8 +164,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_list_contains_same_primitives_in_different_order_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAListOfPrimitives<int>(1, 2, 3)
-                .Equals(new ValueObjectWithAListOfPrimitives<int>(1, 3, 2));
+            var isEqual = new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3))
+                .Equals(new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 3, 2)));
 
             isEqual.Should().BeFalse();
         }
@@ -172,8 +173,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_list_contains_different_primitives_Then_returns_false()
         {
-            var isEqual = new ValueObjectWithAListOfPrimitives<int>(1, 2, 3)
-                .Equals(new ValueObjectWithAListOfPrimitives<int>(1, 2, 4));
+            var isEqual = new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 3))
+                .Equals(new ValueObjectWithValue<ImmutableArray<int>>(ImmutableArray.Create(1, 2, 4)));
 
             isEqual.Should().BeFalse();
         }
