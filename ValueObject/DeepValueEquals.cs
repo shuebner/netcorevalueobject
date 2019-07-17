@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace ValueObject
 {
-    public static class GenericEquals
+    public static class DeepValueEquals
     {
         private static readonly Type[] ValidSequenceTypes = { typeof(ImmutableArray<>), typeof(ImmutableList<>) };
         private static readonly Type[] ValueTypeEquivalents = { typeof(string) };

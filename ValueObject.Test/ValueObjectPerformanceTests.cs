@@ -96,8 +96,6 @@ namespace ValueObject.Test
             var directEqualsMilliSeconds = stopwatch.ElapsedMilliseconds;
             output.WriteLine($"direct: {directEqualsMilliSeconds} ms");
 
-            // warm-up
-            //valueObject1.ValueEquals(valueObject2);
             stopwatch.Restart();
             for (var i = 0; i < interations; i++)
             {
@@ -112,8 +110,8 @@ namespace ValueObject.Test
 
         private class SomeValueObject
         {
-            private static readonly Func<SomeValueObject, SomeValueObject, bool> GenericEqualsFunc =
-                GenericEquals.For<SomeValueObject>();
+            private readonly Func<SomeValueObject, SomeValueObject, bool> DeepEquals =
+                DeepValueEquals.For<SomeValueObject>();
 
             public SomeValueObject(int value)
             {
@@ -129,7 +127,7 @@ namespace ValueObject.Test
                 Value == other.Value;
 
             public bool ValueEquals(SomeValueObject other) =>
-                GenericEqualsFunc(this, other);
+                DeepEquals(this, other);
         }
     }
 

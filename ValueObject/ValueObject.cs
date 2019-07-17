@@ -5,7 +5,7 @@ namespace ValueObject
     public abstract class ValueObject<T> : IEquatable<T>
         where T : ValueObject<T>
     {
-        private static readonly Func<T, T, bool> ValueEquals = GenericEquals.For<T>();
+        private static readonly Func<T, T, bool> DeepEquals = DeepValueEquals.For<T>();
 
         public override bool Equals(object obj) =>
             ReferenceEquals(obj, this) ||
@@ -15,7 +15,7 @@ namespace ValueObject
         public bool Equals(T other) =>
             other != null &&
             (ReferenceEquals(other, this) ||
-            ValueEquals(this, other));
+            DeepEquals(this, other));
 
         public static implicit operator T(ValueObject<T> valueObject) =>
             (T)valueObject;        
