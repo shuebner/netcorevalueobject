@@ -12,7 +12,7 @@ namespace ValueObject
         private static readonly Type[] ValidSequenceTypes = { typeof(ImmutableArray<>), typeof(ImmutableList<>) };
         private static readonly Type[] ValueTypeEquivalents = { typeof(string) };
 
-        public static Func<T, T, bool> For<T>()
+        public static Func<T, T, bool> FromProperties<T>()
         {
             ParameterExpression OneParam = Expression.Parameter(typeof(T), "one");
             ParameterExpression OtherParam = Expression.Parameter(typeof(T), "other");

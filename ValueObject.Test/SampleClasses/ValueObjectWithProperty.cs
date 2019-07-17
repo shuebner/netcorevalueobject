@@ -2,11 +2,11 @@
 {
     public class ValueObjectWithProperty<T> : ValueObject<ValueObjectWithProperty<T>>
     {
-        public ValueObjectWithProperty(T value1)
+        public ValueObjectWithProperty(T value)
         {
-            Value1 = value1;
+            Value = value;
         }
 
-        public T Value1 { get; }
+        public T Value { get; }
     }
 }

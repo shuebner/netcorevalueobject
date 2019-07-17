@@ -111,7 +111,7 @@ namespace ValueObject.Test
         private class SomeValueObject
         {
             private readonly Func<SomeValueObject, SomeValueObject, bool> DeepEquals =
-                DeepValueEquals.For<SomeValueObject>();
+                DeepValueEquals.FromProperties<SomeValueObject>();
 
             public SomeValueObject(int value)
             {
