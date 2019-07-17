@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ValueObject.Test
 {
-    public class ValueObjectTests
+    public class ValueObjectWithPropertyTests
     {
         [Fact]
         public void ObjectEquals_When_other_is_null_Then_returns_false()
