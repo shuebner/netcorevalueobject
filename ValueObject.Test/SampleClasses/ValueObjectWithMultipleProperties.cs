@@ -2,9 +2,9 @@
 
 namespace ValueObject.Test
 {
-    public class ValueObjectWithManyPrimitives : ValueObject<ValueObjectWithManyPrimitives>
+    public class ValueObjectWithMultipleProperties : ValueObject<ValueObjectWithMultipleProperties>
     {
-        public ValueObjectWithManyPrimitives(
+        public ValueObjectWithMultipleProperties(
             string value1,
             string value2,
             string value3,

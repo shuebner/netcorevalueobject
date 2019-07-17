@@ -21,7 +21,7 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_is_an_order_of_magnitude_faster_than_reflection()
         {
-            var foo = new ValueObjectWithManyPrimitives(
+            var foo = new ValueObjectWithMultipleProperties(
                 "foo",
                 "foo",
                 "foo",
@@ -29,7 +29,7 @@ namespace ValueObject.Test
                 "foo",
                 "foo",
                 "foo");
-            var bar = new ValueObjectWithManyPrimitives(
+            var bar = new ValueObjectWithMultipleProperties(
                 "foo",
                 "foo",
                 "foo",
@@ -39,7 +39,7 @@ namespace ValueObject.Test
                 "bar");
 
             // init
-            ReflectionEqualsHelper<ValueObjectWithManyPrimitives>
+            ReflectionEqualsHelper<ValueObjectWithMultipleProperties>
                 .ReflectionEquals(foo, bar);
             const long interations = 1_000_000;
 
@@ -48,7 +48,7 @@ namespace ValueObject.Test
             stopwatch.Start();
             for (var i = 0; i < interations; i++)
             {
-                ReflectionEqualsHelper<ValueObjectWithManyPrimitives>
+                ReflectionEqualsHelper<ValueObjectWithMultipleProperties>
                     .ReflectionEquals(foo, bar);
             }
 
