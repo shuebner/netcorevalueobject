@@ -7,7 +7,7 @@ namespace ValueObject
 {
     public static class Methods
     {
-        public static MethodInfo SequenceEqual(Type type) =>
+        private static readonly MethodInfo OpenGenericSequenceEqual =
             typeof(Enumerable)
                 .GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(method => method.Name == nameof(Enumerable.SequenceEqual))
@@ -17,8 +17,9 @@ namespace ValueObject
                     parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
                     parameters[1].ParameterType.IsGenericType &&
                     parameters[1].ParameterType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
-                .Single()
-                .MakeGenericMethod(type);
+                .Single();
+
+        public static MethodInfo SequenceEqual(Type type) => OpenGenericSequenceEqual.MakeGenericMethod(type);
 
         public static MethodInfo EquatableEquals(Type type) =>
             type.GetMethod(
