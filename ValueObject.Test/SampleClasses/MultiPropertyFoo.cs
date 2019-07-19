@@ -2,9 +2,9 @@
 
 namespace ValueObject.Test
 {
-    public class ValueObjectWithMultipleProperties : ValueObject<ValueObjectWithMultipleProperties>
+    public class MultiPropertyFoo : PropertyValueObject<MultiPropertyFoo>
     {
-        public ValueObjectWithMultipleProperties(
+        public MultiPropertyFoo(
             string value1,
             string value2,
             string value3,

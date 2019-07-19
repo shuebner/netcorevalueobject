@@ -2,8 +2,8 @@
 
 namespace ValueObject
 {
-    public abstract class ValueObject<T> : IEquatable<T>
-        where T : ValueObject<T>
+    public abstract class PropertyValueObject<T> : IEquatable<T>
+        where T : PropertyValueObject<T>
     {
         private static readonly Func<T, T, bool> DeepEquals = DeepValueEquals.FromProperties<T>();
 
@@ -17,7 +17,7 @@ namespace ValueObject
             (ReferenceEquals(other, this) ||
             DeepEquals(this, other));
 
-        public static implicit operator T(ValueObject<T> valueObject) =>
+        public static implicit operator T(PropertyValueObject<T> valueObject) =>
             (T)valueObject;        
     }
 }
