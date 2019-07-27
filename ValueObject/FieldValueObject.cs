@@ -2,22 +2,11 @@
 
 namespace ValueObject
 {
-    public abstract class FieldValueObject<T> : IEquatable<T>
+    public abstract class FieldValueObject<T> : ValueObject<T>
         where T : FieldValueObject<T>
     {
-        private static readonly Func<T, T, bool> DeepEquals = DeepValueEquals.FromFields<T>();
+        private static readonly Func<T, T, bool> DeepEqualsFunc = DeepValueEquals.FromFields<T>();
 
-        public override bool Equals(object obj) =>
-            ReferenceEquals(obj, this) ||
-            (obj is T other &&
-            Equals(other));
-
-        public bool Equals(T other) =>
-            other != null &&
-            (ReferenceEquals(other, this) ||
-            DeepEquals(this, other));
-
-        public static implicit operator T(FieldValueObject<T> valueObject) =>
-            (T)valueObject;        
+        protected override bool DeepEquals(T one, T other) => DeepEqualsFunc(one, other);
     }
 }

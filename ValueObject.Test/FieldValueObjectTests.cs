@@ -8,6 +8,14 @@ namespace ValueObject.Test
     public class FieldValueObjectTests
     {
         [Fact]
+        public void Initializer_When_inheriting_type_is_not_ValueObject_type()
+        {
+            Action act = () => new ValueObjectWithWrongTypeParameter();
+
+            act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
         public void ObjectEquals_When_other_is_null_Then_returns_false()
         {
             var isEqual = ((object)new FieldFoo<string>("42")).Equals(null);
@@ -101,7 +109,8 @@ namespace ValueObject.Test
         [Fact]
         public void Equals_When_equatables_are_equal_Then_returns_true()
         {
-            var isEqual = new FieldFoo<SomeEquatable>(new SomeEquatable("42"))
+            FieldFoo<SomeEquatable> fieldFoo = new FieldFoo<SomeEquatable>(new SomeEquatable("42"));
+            var isEqual = fieldFoo
                 .Equals(new FieldFoo<SomeEquatable>(new SomeEquatable("42")));
 
             isEqual.Should().BeTrue();
@@ -214,6 +223,14 @@ namespace ValueObject.Test
             public bool Equals(SomeEquatable other) =>
                 other != null &&
                 other.Value == Value;
+        }
+
+        private class ValueObjectWithWrongTypeParameter : FieldValueObject<OtherFoo>
+        {
+        }
+
+        private class OtherFoo : FieldValueObject<OtherFoo>
+        {
         }
     }
 }
