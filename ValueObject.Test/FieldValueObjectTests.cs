@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using Xunit;
 
@@ -210,6 +211,88 @@ namespace ValueObject.Test
 
             isEqual.Should().BeFalse();
         }
+
+        [Fact]
+        public void GetHashCode_When_fields_are_equal_Then_produces_same_result()
+        {
+            var foo1 = new MultiFieldFoo("first", "second", "third", "fourth", "fifth", "sixth", "seventh");
+            var foo2 = new MultiFieldFoo("first", "second", "third", "fourth", "fifth", "sixth", "seventh");
+
+            var hashCode1 = foo1.GetHashCode();
+            var hashCode2 = foo2.GetHashCode();
+
+            hashCode1.Should().Be(hashCode2);
+        }
+
+        [Fact]
+        public void GetHashCode_When_fields_are_different_Then_produces_different_result_with_high_enough_probability()
+        {
+            var foo1 = new MultiFieldFoo("first", "second", "third", "fourth", "fifth", "sixth", "seventh");
+            var foo2 = new MultiFieldFoo("first", "second", "second", "fourth", "fifth", "sixth", "seventh");
+
+            var hashCode1 = foo1.GetHashCode();
+            var hashCode2 = foo2.GetHashCode();
+
+            hashCode1.Should().NotBe(hashCode2);
+        }
+
+        [Theory]
+        [MemberData(nameof(HashCodeExamplesWithNull))]
+        public void GetHashCode_When_a_field_is_null_Then_still_works(MultiFieldFoo foo1, MultiFieldFoo foo2, bool expectedHashCodeEquals)
+        {
+            var hashCode1 = foo1.GetHashCode();
+            var hashCode2 = foo2.GetHashCode();
+
+            hashCode1.Equals(hashCode2).Should().Be(expectedHashCodeEquals);
+        }
+
+        [Theory]
+        [MemberData(nameof(HashCodeExamplesWithLists))]
+        public void GetHashCode_respects_list_member_order(FieldFoo<ImmutableArray<int>> foo1, FieldFoo<ImmutableArray<int>> foo2, bool expectedHashCodeEquals)
+        {
+            var hashCode1 = foo1.GetHashCode();
+            var hashCode2 = foo2.GetHashCode();
+
+            hashCode1.Equals(hashCode2).Should().Be(expectedHashCodeEquals);
+        }
+
+        public static IEnumerable<object[]> HashCodeExamplesWithNull => new[]
+        {
+            new object[]
+            {
+                new MultiFieldFoo("first", null, "third", "fourth", "fifth", "sixth", "seventh"),
+                new MultiFieldFoo("first", null, "third", "fourth", "fifth", "sixth", "seventh"),
+                true
+            },
+            new object[]
+            {
+                new MultiFieldFoo("first", null, "third", "fourth", "fifth", "sixth", "seventh"),
+                new MultiFieldFoo("first", "second", null, "fourth", "fifth", "sixth", "seventh"),
+                false
+            },
+            new object[]
+            {
+                new MultiFieldFoo("first", null, "foo", "fourth", "fifth", "sixth", "seventh"),
+                new MultiFieldFoo("first", "foo", null, "fourth", "fifth", "sixth", "seventh"),
+                false
+            }
+        };
+
+        public static IEnumerable<object[]> HashCodeExamplesWithLists => new[]
+        {
+            new object[]
+            {
+                new FieldFoo<ImmutableArray<int>>(ImmutableArray.Create<int>(1, 2, 3)),
+                new FieldFoo<ImmutableArray<int>>(ImmutableArray.Create<int>(1, 2, 3)),
+                true
+            },
+            new object[]
+            {
+                new FieldFoo<ImmutableArray<int>>(ImmutableArray.Create<int>(1, 2, 3)),
+                new FieldFoo<ImmutableArray<int>>(ImmutableArray.Create<int>(1, 3, 2)),
+                false
+            }
+        };
 
         private class SomeEquatable : IEquatable<SomeEquatable>
         {

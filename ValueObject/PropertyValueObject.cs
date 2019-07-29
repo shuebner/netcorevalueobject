@@ -8,5 +8,10 @@ namespace ValueObject
         private static readonly Func<T, T, bool> DeepEqualsFunc = DeepValueEquals.FromProperties<T>();
 
         protected override bool DeepEquals(T one, T other) => DeepEqualsFunc(one, other);
+
+        public override int GetHashCode()
+        {
+            return 1;
+        }
     }
 }

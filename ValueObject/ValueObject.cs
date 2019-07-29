@@ -29,5 +29,7 @@ namespace ValueObject
             DeepEquals(thisAsT, other));
 
         protected abstract bool DeepEquals(T one, T other);
+
+        public override abstract int GetHashCode();
     }
 }
