@@ -1,4 +1,5 @@
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using System;
 using System.Collections.Immutable;
 using Xunit;
@@ -209,6 +210,22 @@ namespace ValueObject.Test
                 .Equals(new FieldFoo<int?>(otherValue));
 
             isEqual.Should().BeFalse();
+        }
+
+        [Fact]
+        public void With_returns_new_object_with_set_value()
+        {
+            var foo1 = new MultiFieldFoo("first", "second", "third");
+
+            var newFoo = foo1.With(foo => foo.Value2, "two");
+
+            foo1.Value2.Should().Be("second");
+            newFoo.Should().BeEquivalentTo(new
+            {
+                Value1 = "first",
+                Value2 = "two",
+                Value3 = "third"
+            });
         }
 
         private class SomeEquatable : IEquatable<SomeEquatable>
