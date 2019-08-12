@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -16,7 +15,7 @@ namespace ValueObject.Test
         public ValueObjectPerformanceTests(ITestOutputHelper output)
         {
             this.output = output;
-        }
+        }        
 
         [Fact]
         public void Equals_is_an_order_of_magnitude_faster_than_reflection()
@@ -41,31 +40,13 @@ namespace ValueObject.Test
             // init
             ReflectionEqualsHelper<MultiPropertyFoo>
                 .ReflectionEquals(foo, bar);
-            const long interations = 1_000_000;
 
-            var stopwatch = new Stopwatch();
+            var results = Performance.Test(1_000_000, output,
+                ("reflection", () => ReflectionEqualsHelper<MultiPropertyFoo>.ReflectionEquals(foo, bar)),
+                ("equals", () => foo.Equals(bar)));
 
-            stopwatch.Start();
-            for (var i = 0; i < interations; i++)
-            {
-                ReflectionEqualsHelper<MultiPropertyFoo>
-                    .ReflectionEquals(foo, bar);
-            }
-
-            var reflectionEqualsMilliSeconds = stopwatch.ElapsedMilliseconds;
-            output.WriteLine($"reflection: {reflectionEqualsMilliSeconds} ms");
-
-            stopwatch.Restart();
-            for (var i = 0; i < interations; i++)
-            {
-                foo.Equals(bar);
-            }
-
-            var equalsMilliseconds = stopwatch.ElapsedMilliseconds;
-            output.WriteLine($"equals: {equalsMilliseconds} ms");
-
-            equalsMilliseconds.Should().BeLessThan(
-                reflectionEqualsMilliSeconds / 10);
+            results["equals"].Should().BeLessThan(
+                results["reflection"] / 10);
         }
 
         [Fact]
@@ -74,38 +55,12 @@ namespace ValueObject.Test
             var valueObject1 = new SomeValueObject(1);
             var valueObject2 = new SomeValueObject(2);
 
-            const long interations = 10_000_000;
+            var results = Performance.Test(10_000_000, output,
+                ("boxing", () => valueObject1.BoxingEquals(valueObject2)),
+                ("direct", () => valueObject1.DirectEquals(valueObject2)),
+                ("equals", () => valueObject1.ValueEquals(valueObject2)));
 
-            var stopwatch = new Stopwatch();
-
-            stopwatch.Start();
-            for (var i = 0; i < interations; i++)
-            {
-                valueObject1.BoxingEquals(valueObject2);
-            }
-
-            var boxingEqualsMilliSeconds = stopwatch.ElapsedMilliseconds;
-            output.WriteLine($"boxing: {boxingEqualsMilliSeconds} ms");
-
-            stopwatch.Restart();
-            for (var i = 0; i < interations; i++)
-            {
-                valueObject1.DirectEquals(valueObject2);
-            }
-
-            var directEqualsMilliSeconds = stopwatch.ElapsedMilliseconds;
-            output.WriteLine($"direct: {directEqualsMilliSeconds} ms");
-
-            stopwatch.Restart();
-            for (var i = 0; i < interations; i++)
-            {
-                valueObject1.ValueEquals(valueObject2);
-            }
-
-            var equalsMilliseconds = stopwatch.ElapsedMilliseconds;
-            output.WriteLine($"equals: {equalsMilliseconds} ms");
-
-            equalsMilliseconds.Should().BeLessThan((long)(boxingEqualsMilliSeconds / 2));
+            results["equals"].Should().BeLessThan((long)(results["boxing"] / 2));
         }
 
         private class SomeValueObject

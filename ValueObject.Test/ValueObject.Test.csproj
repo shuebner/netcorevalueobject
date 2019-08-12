@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ImmutableObject\ImmutableObject.csproj" />
     <ProjectReference Include="..\ValueObject\ValueObject.csproj" />
   </ItemGroup>
 
