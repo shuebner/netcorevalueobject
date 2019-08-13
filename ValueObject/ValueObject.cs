@@ -4,7 +4,7 @@ namespace ValueObject
 {
     public abstract class ValueObject<T> : IEquatable<T>
     {
-        private readonly T thisAsT;
+        protected readonly T thisAsT;
 
         protected ValueObject()
         {
