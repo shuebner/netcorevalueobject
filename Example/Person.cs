@@ -8,7 +8,7 @@ namespace Example
 {
     public class Person
     {
-        private static readonly Func<Person, string, object, Person> WithFunc = ImmutableObject.With.For<Person>();
+        private static readonly Func<Person, LambdaExpression, object, Person> WithFunc = ImmutableObject.With.For<Person>();
 
         public readonly Name Name;
         public readonly ContactInfo ContactInfo;
@@ -20,7 +20,7 @@ namespace Example
         }
 
         public Person With<T>(Expression<Func<Person, T>> propertyExpression, T value) => 
-            WithFunc(this, ((MemberExpression)propertyExpression.Body).Member.Name, value);
+            WithFunc(this, propertyExpression, value);
     }
 
     public class Name : FieldValueObject<Name>

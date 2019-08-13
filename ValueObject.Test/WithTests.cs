@@ -56,7 +56,7 @@ namespace ValueObject.Test
             private static readonly ParameterInfo[] CtorParamInfos;
             private static readonly ImmutableDictionary<string, FieldInfo> FieldByParamName;
 
-            private static readonly Func<Foo, string, object, Foo> WithFunc;
+            private static readonly Func<Foo, LambdaExpression, object, Foo> WithFunc;
 
             // eager initialize
             static Foo()
@@ -84,7 +84,7 @@ namespace ValueObject.Test
             }
 
             public Foo With<T>(Expression<Func<Foo, T>> fieldExpr, T value) =>
-                WithFunc(this, ((MemberExpression)fieldExpr.Body).Member.Name, value);
+                WithFunc(this, fieldExpr, value);
 
             public Foo ExplicitWithValue2(string newValue2) =>
                 new Foo(Value1, newValue2, Value3);

@@ -8,7 +8,7 @@ namespace ImmutableObject
 {
     public static class With
     {
-        public static Func<T, string, object, T> For<T>()
+        public static Func<T, LambdaExpression, object, T> For<T>()
         {
             var type = typeof(T);
             ConstructorInfo ctor = type.GetConstructors().Single();
@@ -18,14 +18,25 @@ namespace ImmutableObject
                 .ToImmutableDictionary(field => field.Name, field => GetConstructorWithFieldValue<T>(ctor, ctorParamInfos, field.Name));
 
             ParameterExpression obj = Expression.Parameter(typeof(T), "obj");
-            ParameterExpression memberName = Expression.Parameter(typeof(string), "memberName");
+            ParameterExpression memberExpr = Expression.Parameter(typeof(LambdaExpression), "memberExpr");
             ParameterExpression newValue = Expression.Parameter(typeof(object), "newValue");
+
+            var getMemberName =
+                Expression.Property(
+                    Expression.Property(
+                        Expression.Convert(
+                            Expression.Property(
+                                memberExpr,
+                                nameof(LambdaExpression.Body)),
+                            typeof(MemberExpression)),
+                        nameof(MemberExpression.Member)),
+                    nameof(MemberInfo.Name));
             
             var getCtorFuncExpression =
                 Expression.Property(
                     Expression.Constant(createNewObjectByFieldName),
                     "Item",
-                    memberName);
+                    getMemberName);
 
             var getNewObjWithNewValueExpression =
                 Expression.Invoke(
@@ -33,10 +44,10 @@ namespace ImmutableObject
                     obj,
                     newValue);
 
-            var with = Expression.Lambda<Func<T, string, object, T>>(
+            var with = Expression.Lambda<Func<T, LambdaExpression, object, T>>(
                 getNewObjWithNewValueExpression,
                 obj,
-                memberName,
+                memberExpr,
                 newValue);
 
             return with.Compile();
