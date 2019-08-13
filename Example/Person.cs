@@ -1,19 +1,46 @@
 ﻿using KindOf;
+using System;
 using System.Globalization;
+using System.Linq.Expressions;
 using ValueObject;
 
 namespace Example
 {
-    public class Person : FieldValueObject<Person>
+    public class Person
+    {
+        private static readonly Func<Person, string, object, Person> WithFunc = ImmutableObject.With.For<Person>();
+
+        public readonly Name Name;
+        public readonly ContactInfo ContactInfo;
+
+        public Person(Name name, ContactInfo contactInfo)
+        {
+            Name = name;
+            ContactInfo = contactInfo;
+        }
+
+        public Person With<T>(Expression<Func<Person, T>> propertyExpression, T value) => 
+            WithFunc(this, ((MemberExpression)propertyExpression.Body).Member.Name, value);
+    }
+
+    public class Name : FieldValueObject<Name>
     {
         public readonly FirstName FirstName;
         public readonly LastName LastName;
-        public readonly EmailAddress EmailAddress;
 
-        public Person(FirstName firstName, LastName lastName, EmailAddress emailAddress)
+        public Name(FirstName firstName, LastName lastName)
         {
             FirstName = firstName;
             LastName = lastName;
+        }
+    }
+
+    public class ContactInfo : FieldValueObject<ContactInfo>
+    {
+        public readonly EmailAddress EmailAddress;
+
+        public ContactInfo(EmailAddress emailAddress)
+        {
             EmailAddress = emailAddress;
         }
     }
@@ -55,6 +82,15 @@ namespace Example
                       StringValidators.NoWhitespace),
                   StringCanonicalizers.LowerCase(CultureInfo.InvariantCulture))
         {
+        }
+    }
+
+    public class PersonService
+    {
+        public static Person MarryTo(Person person, Person spouse)
+        {
+            var newName = person.Name.With(name => name.LastName, spouse.Name.LastName);
+            return person.With(p => p.Name, newName);
         }
     }
 }
