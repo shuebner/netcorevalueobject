@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValueObject.Test", "ValueOb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImmutableObject", "ImmutableObject\ImmutableObject.csproj", "{BBF4287A-2EDC-4D47-A562-74A3E96D8D96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KindOf", "KindOf\KindOf.csproj", "{DE7E6E83-8341-411F-BFEB-74777749848A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KindOf", "KindOf\KindOf.csproj", "{DE7E6E83-8341-411F-BFEB-74777749848A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KindOf.Test", "KindOf.Test\KindOf.Test.csproj", "{80D8437B-74A9-41F8-9C0A-BFB563D22BE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KindOf.Test", "KindOf.Test\KindOf.Test.csproj", "{80D8437B-74A9-41F8-9C0A-BFB563D22BE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{682D5F5C-4419-47D8-BD58-57406E42A357}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{80D8437B-74A9-41F8-9C0A-BFB563D22BE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80D8437B-74A9-41F8-9C0A-BFB563D22BE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80D8437B-74A9-41F8-9C0A-BFB563D22BE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{682D5F5C-4419-47D8-BD58-57406E42A357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{682D5F5C-4419-47D8-BD58-57406E42A357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{682D5F5C-4419-47D8-BD58-57406E42A357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{682D5F5C-4419-47D8-BD58-57406E42A357}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
