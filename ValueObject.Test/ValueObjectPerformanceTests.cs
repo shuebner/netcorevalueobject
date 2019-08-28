@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ImmutableObject;
 using System;
 using System.Linq;
 using System.Reflection;

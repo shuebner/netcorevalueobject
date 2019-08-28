@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ImmutableObject;
+using System;
 
 namespace ValueObject
 {

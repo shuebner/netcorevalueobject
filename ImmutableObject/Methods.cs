@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace ValueObject
+namespace ImmutableObject
 {
     public static class Methods
     {
