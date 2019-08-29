@@ -15,7 +15,7 @@ namespace KindOf
 
             var result = Validators.AllOf(successful, firstError, secondError)("foo");
 
-            result.Should().BeAssignableTo<ValidationResult<string>.ErrorResult>().Which.ErrorMessage.Should().Be("first");
+            result.Should().BeAssignableTo<ValidationResult<string>.Error>().Which.ErrorMessage.Should().Be("first");
         }
     }
 }

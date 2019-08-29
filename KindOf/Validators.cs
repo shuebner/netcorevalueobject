@@ -8,7 +8,7 @@ namespace KindOf
         public static Func<T, ValidationResult<T>> AllOf<T>(params Func<T, ValidationResult<T>>[] validators) =>
             str => validators
                 .Select(validate => validate(str))
-                .FirstOrDefault(result => result is ValidationResult<T>.ErrorResult) is ValidationResult<T>.ErrorResult error
+                .FirstOrDefault(result => result is ValidationResult<T>.Error) is ValidationResult<T>.Error error
                     ? error
                     : ValidationResult.Success<T>();
 

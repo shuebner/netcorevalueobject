@@ -2,10 +2,10 @@
 {
     public class ValidationResult
     {
-        public static ValidationResult<T> Success<T>() => new ValidationResult<T>.SuccessResult();
+        public static ValidationResult<T> Success<T>() => new ValidationResult<T>.Success();
 
         public static ValidationResult<T> Error<T>(string errorMessage, T invalidValue) =>
-            new ValidationResult<T>.ErrorResult(errorMessage, invalidValue);
+            new ValidationResult<T>.Error(errorMessage, invalidValue);
     }
 
     public abstract class ValidationResult<T>
@@ -14,21 +14,21 @@
         {
         }
 
-        public class SuccessResult
+        public class Success
             : ValidationResult<T>
         {
-            internal SuccessResult()
+            internal Success()
             {
             }
         }
 
-        public class ErrorResult
+        public class Error
             : ValidationResult<T>
         {
             public readonly string ErrorMessage;
             public readonly T OriginalValue;
 
-            internal ErrorResult(string errorMessage, T invalidValue)
+            internal Error(string errorMessage, T invalidValue)
             {
                 ErrorMessage = errorMessage;
                 OriginalValue = invalidValue;
