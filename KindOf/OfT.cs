@@ -4,7 +4,7 @@ namespace KindOf
 {
     public abstract class Of<T>
     {
-        private readonly T Value;
+        protected readonly T Value;
 
         public Of(T value)
         {

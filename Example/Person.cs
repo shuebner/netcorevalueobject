@@ -45,7 +45,7 @@ namespace Example
         }
     }
 
-    public class FirstName : OfString
+    public class FirstName : OfString<FirstName>
     {
         public FirstName(string value)
             : base(value,
@@ -59,7 +59,7 @@ namespace Example
         }
     }
 
-    public class LastName : OfString
+    public class LastName : OfString<LastName>
     {
         public LastName(string value)
             : base(value,
@@ -73,7 +73,7 @@ namespace Example
         }
     }
 
-    public class EmailAddress : OfString
+    public class EmailAddress : OfString<EmailAddress>
     {
         public EmailAddress(string value)
             : base(value,
